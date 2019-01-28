@@ -1,0 +1,19 @@
+header > div > h1 {
+  margin-left: 1em;
+}
+
+section > div {
+  margin-left: 1em;
+}
+
+.btn-info.active {
+  background-color: limegreen;
+}
+
+.percents {    
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.has-error {
+  border: 3px solid red;
+}
