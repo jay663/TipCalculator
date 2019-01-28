@@ -1,6 +1,7 @@
 import 'bootstrap';
 import './styles.css';
 import { calculateTip, calculateTotalBill } from "./tip-calculator";
+import { updateTipTable } from "./tip-formatter";
 import { clearError, showInputError, validateAmount } from "./validation";
 
 let billAmount, percent, total, percentButtons, factor;
@@ -13,7 +14,7 @@ export function ready(cb) {
     }
 }
 
-function doIt() {
+function main() {
     percent = 10;    
     let element = document.querySelector('#billAmount');    
     element.addEventListener('input', handleAmountChange);
@@ -26,15 +27,8 @@ function doIt() {
 
 }
 
-function updateTipTable(tip, totalBill, percent, billAmount) {
-    console.log("The Tip is: " + tip);
-    console.log("The totalBill is: " + totalBill);
-    console.log("The percent is: " + percent);
-    console.log("The billamount is: " + billAmount);
-}
-
 function setActivePercent(p) {
-    percent = parseInt(p);
+    percent = parseInt(p);    
 }
 
 
@@ -59,11 +53,25 @@ function handlePercentSelectedClick(evt) {
         let tip = calculateTip(billAmount, percent);
         let totalBill = calculateTotalBill(billAmount,tip);
         updateTipTable(tip, totalBill, percent, billAmount);
+
+        toggleActivePercentButtons(currentPercent);
     }
 
     console.log(parseInt(this.dataset.number));    
 }
 
+function toggleActivePercentButtons(button) {
+    percentButtons = document.querySelectorAll('.percents');
+    percentButtons.forEach(function (el) {
+        if(el !== button){
+            el.addEventListener('click', handlePercentSelectedClick);
+        }else{
+            el.removeEventListener('click', handlePercentSelectedClick)
+        }    
+        
+    });    
+    
+}
 
 
-ready(doIt);
+ready(main);
