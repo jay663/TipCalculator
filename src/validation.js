@@ -29,16 +29,25 @@ export function clearError() {
 }
 
 function isValidCurrency(element){
-    return true;
-        // if(element.value !== '') {
-        //     let numsArray = element.value.split(".");
-        //     if(numsArray.length > 0){
-        //         let numDec = numsArray[1].length;
-        //         console.log(numDec + " number of decimals");
-        //         if(numDec > 2){
-        //             return false;
-        //         }
+    let currency = element.value;
+        
+    // Decimal place is optional but must have 2 numbers after if used.
+    // Didn't have much luck with regular expressions on currency
+    let count = (currency.match(/\./g) || []).length;
+    if(count > 1){
+        return false;
+    }
+
+    let numsArray = currency.split(".");
+    if(!Array.isArray(numsArray)){
+        return true;
+    } 
     
-        //     }
-        // }
+    if(numsArray.length === 2) {
+        let numDec = numsArray[1].length;
+        return numDec > 2 ? false : true;        
+    }
+               
+    return true;
+    
 }
