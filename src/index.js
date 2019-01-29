@@ -1,10 +1,10 @@
 import 'bootstrap';
 import './styles.css';
-import { calculateTip, calculateTotalBill } from "./tip-calculator";
-import { updateTipTable } from "./tip-formatter";
-import { clearError, showInputError, validateAmount } from "./validation";
+import { calculateTipAmount, calculateTotalBill } from "./tip-calculator";
+import { updateTipTable, clearTipTable } from "./tip-formatter";
+import { clearError, showInputError, isValidAmount } from "./validation";
 
-let billAmount, percent, total, percentButtons, factor;
+let billAmount, percent, percentButtons;
 
 export function ready(cb) {
     document.onreadystatechange = function () {
@@ -16,9 +16,9 @@ export function ready(cb) {
 
 function main() {
     percent = 10;    
+    billAmount = 0;
     let element = document.querySelector('#billAmount');    
-    element.addEventListener('input', handleAmountChange);
-    billAmount = element.value;    
+    element.addEventListener('input', handleAmountChange);    
 
     percentButtons = document.querySelectorAll('.percents');
     percentButtons.forEach(function (el) {
@@ -27,37 +27,41 @@ function main() {
 
 }
 
-function setActivePercent(p) {
-    percent = parseInt(p);    
-}
-
-
 function handleAmountChange(evt) {
     const amountElement = this;
     
-    if(validateAmount(amountElement)){        
-        billAmount = parseInt(amountElement.value);
+    if(!(amountElement.value)){
+        clearTipTable();
+        return;
+    }
+
+
+    if(isValidAmount(amountElement)){        
         clearError();
-        let tip = calculateTip(billAmount, percent);
-        let totalBill = calculateTotalBill(billAmount,tip);
-        updateTipTable(tip, totalBill, percent, billAmount);         
+        
+        billAmount = parseFloat(amountElement.value);                
+        calculateAndDisplayTip(billAmount, percent);
+         
     }else{
         showInputError();
     }
 }
 
+function calculateAndDisplayTip(billAmount, percent) {
+    let tip = calculateTipAmount(billAmount, percent);
+    let totalBill = calculateTotalBill(billAmount,tip);
+    updateTipTable(tip, totalBill, percent, billAmount);    
+}
+
 function handlePercentSelectedClick(evt) {
     const currentPercent = this;
-    setActivePercent(currentPercent.value);
-    if(validateAmount(billAmount)){
-        let tip = calculateTip(billAmount, percent);
-        let totalBill = calculateTotalBill(billAmount,tip);
-        updateTipTable(tip, totalBill, percent, billAmount);
-
+    percent = parseInt(currentPercent.value);    
+    
+    if(isValidAmount(billAmount)){
+        calculateAndDisplayTip(billAmount, percent);
         toggleActivePercentButtons(currentPercent);
     }
 
-    console.log(parseInt(this.dataset.number));    
 }
 
 function toggleActivePercentButtons(button) {
@@ -69,8 +73,7 @@ function toggleActivePercentButtons(button) {
             el.removeEventListener('click', handlePercentSelectedClick)
         }    
         
-    });    
-    
+    });        
 }
 
 

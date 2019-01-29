@@ -1,10 +1,10 @@
-export function calculateTip(amount, percent) {
+export function calculateTipAmount(amount, percent) {
     let x = percent/100;
-    let t = amount * x;
-    return t;
+    let tip = parseFloat((amount * x).toFixed(2));
+    return tip;
 }
 
 export function calculateTotalBill(amount, tip) {    
-    let b = amount + tip;
-    return b;
+    let bill = amount + tip;
+    return bill;
 }

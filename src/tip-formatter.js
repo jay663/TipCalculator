@@ -1,28 +1,38 @@
 export function updateTipTable(tip, totalBill, percent, billAmount) {
-    document.querySelectorAll(".list-group-item").forEach(e => e.parentNode.removeChild(e));
+    clearTipTable();
     let tipCalculation = document.querySelector('#tipCalculation'); 
-    
-    let tipPercentTextElement = document.querySelector('#tipAmount'); 
-    tipPercentTextElement.innerHTML = `You are tipping ${tip}%`
+    let billAmountText = formatFloat(billAmount);
+    let tipText = formatFloat(tip);
+    let totalText = formatFloat(totalBill);
 
-    let billElement = createListItem(`Bill Amount: $${billAmount}%`);        
+    let tipPercentTextElement = document.querySelector('#tipAmount'); 
+    tipPercentTextElement.innerHTML = `You are tipping ${percent}%`
+
+    let billElement = createListItem(`Bill Amount: $${billAmountText}`);        
     tipCalculation.appendChild(billElement);
     
     let tipElement = createListItem(`Tip Percentage: ${percent}%`);        
     tipCalculation.appendChild(tipElement);
 
-    let tipChargeElement = createListItem(`Amount of tip: $${tip}`);    
+    let tipChargeElement = createListItem(`Amount of tip: $${tipText}`);    
     tipCalculation.appendChild(tipChargeElement);
 
-    let totalElement = createListItem(`Total to be Paid: $${totalBill}`);        
+    let totalElement = createListItem(`Total to be Paid: $${totalText}`);        
     tipCalculation.appendChild(totalElement);
 
-    console.log("The Tip is: " + tip);
-    console.log("The totalBill is: " + totalBill);
-    console.log("The percent is: " + percent);
-    console.log("The billamount is: " + billAmount);
 }
 
+export function clearTipTable(){
+    document.querySelectorAll(".list-group-item").forEach(e => e.parentNode.removeChild(e));   
+}
+
+function formatFloat(amount){
+    if(!Number.isNaN(amount) && typeof(amount) === "number"){
+        return amount.toFixed(2);
+    }
+
+    return "0.00";
+}
 
 function createListItem(itemText) {
     let element = document.createElement("li");    
@@ -30,3 +40,4 @@ function createListItem(itemText) {
     element.classList.add("list-group-item");
     return element;
 }
+
